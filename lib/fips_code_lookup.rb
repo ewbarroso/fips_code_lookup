@@ -16,7 +16,7 @@ module FipsCodeLookup
       state_pc, state_fips, county_fips, county, class_code = row.split(",")
       if county == name
         return { "county_fips": county_fips, "state_fips": state_fips,
-                 "fips_class": class_code.gsub(/\n/, "") }
+                 "state_pc": state_pc, "fips_class": class_code.gsub(/\n/, "") }
       end
     end
   end
