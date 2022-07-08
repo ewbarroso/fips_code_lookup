@@ -6,7 +6,7 @@ module FipsCodeLookup
   class Error < StandardError; end
 
   # Your code goes here...
-  def county(state, name)
+  def self.county(state, name)
     # lookup state code to file
     # parse file for name and return fips code
     csv = CSV.read("county/#{state}.csv", headers: true)
