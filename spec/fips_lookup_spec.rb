@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe FipsCodeLookup do
+RSpec.describe FipsLookup do
   it "has a version number" do
-    expect(FipsCodeLookup::VERSION).not_to be nil
+    expect(FipsLookup::VERSION).not_to be nil
   end
 
   it "does something useful" do

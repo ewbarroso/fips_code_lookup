@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fips_code_lookup (0.1.0)
+    fips_lookup (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -56,7 +56,7 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
-  fips_code_lookup!
+  fips_lookup!
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop (~> 1.21)

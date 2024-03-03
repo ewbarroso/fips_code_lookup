@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in fips_code_lookup.gemspec
+# Specify your gem's dependencies in fips_lookup.gemspec
 gemspec
 
 gem "rake", "~> 13.0"

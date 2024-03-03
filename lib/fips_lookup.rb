@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "fips_code_lookup/version"
+require_relative "fips_lookup/version"
 require 'csv' 
 
-module FipsCodeLookup
+module FipsLookup
   class Error < StandardError; end
 
   STATE_POSTAL_CODES = %w[AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS
@@ -14,17 +14,17 @@ module FipsCodeLookup
   # look up how ruby gem's should throw errors within their functions (404/ county not found / etc.)
   # ^ when error does it fail gracefully or keep searching & memoizing ?
 
-  def self.county_fips(state_param, county_name_param)
+  def self.county(state_param, county_name_param)
     # check if file from state exists? 
     # check if county is within file ?(OR returns nil!!)
     # ^ check how error handling is stored within instance variable (memoization)
 
     lookup = [state_param, county_name_param]
     @_county_fips ||= {}
-    @_county_fips[lookup] ||= county_fips_lookup(state_param, county_name_param)
+    @_county_fips[lookup] ||= county_lookup(state_param, county_name_param)
   end
 
-  def self.county_fips_lookup(state_param, county_name_param)
+  def self.county_lookup(state_param, county_name_param)
     # return if no file ? (or check if this will exit from errors before)
 
     CSV.foreach(county_filename(state_param)) do |county_row|
@@ -35,6 +35,8 @@ module FipsCodeLookup
     end
     # what to return if county not found?
   end
+
+  # state code lookups (geo id - memoize whole state file ?)
 
   # private ?
 

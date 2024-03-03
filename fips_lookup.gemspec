@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "lib/fips_code_lookup/version"
+require_relative "lib/fips_lookup/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "fips_code_lookup"
-  spec.version = FipsCodeLookup::VERSION
+  spec.name = "fips_lookup"
+  spec.version = FipsLookup::VERSION
   spec.authors = ["Erik Barroso"]
-  spec.email = ["erik.barroso@primary.health"]
+  spec.email = ["erikbarroso22@gmail.com"]
 
   spec.summary = "Stores FIPS codes for US States and Counties"
   # spec.description = "TODO: Write a longer description or delete this line."
