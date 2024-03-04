@@ -4,60 +4,56 @@ require_relative "fips_lookup/version"
 require 'csv' 
 
 module FipsLookup
-  class Error < StandardError; end
 
   STATE_POSTAL_CODES = %w[AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS
                           KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
                           ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
                           AS GU MP PR UM VI].freeze
 
-  # look up how ruby gem's should throw errors within their functions (404/ county not found / etc.)
-  # ^ when error does it fail gracefully or keep searching & memoizing ?
-
+  # when county not found and raise StandardError, input is not memoized - stack bubbles with error
+  # when county not found without raise error, input is memoized and nil is returned
   def self.county(state_param, county_name_param)
-    # check if file from state exists? 
-    # check if county is within file ?(OR returns nil!!)
-    # ^ check how error handling is stored within instance variable (memoization)
-
     lookup = [state_param, county_name_param]
     @_county_fips ||= {}
+    # puts "fips memo hash: ", @_county_fips
     @_county_fips[lookup] ||= county_lookup(state_param, county_name_param)
   end
 
   def self.county_lookup(state_param, county_name_param)
-    # return if no file ? (or check if this will exit from errors before)
+    state_code = find_state_code(state_param)
 
-    CSV.foreach(county_filename(state_param)) do |county_row|
-      #CSV columns: state code, state fips, county fips, county name, county class code
+    CSV.foreach(state_county_file(state_code)) do |county_row|
+      # state (AL), state code (01), county fips (001), county name (Augtauga County), county class code (H1)
       if county_row[3].upcase == county_name_param.upcase
         return county_row[2]
       end
     end
-    # what to return if county not found?
+    # retry with variations of county param?
+
+    # raise StandardError, "No county found matching: #{county_name_param}"
   end
 
-  # state code lookups (geo id - memoize whole state file ?)
-
-  # private ?
+  # state code lookups (geo id / ANSI - memoize whole state file ?)
 
   def self.find_state_code(state_param)
     return state_param.upcase if STATE_POSTAL_CODES.include?(state_param.upcase)
 
-    state_file_name = File.join(File.dirname(__FILE__), "/state.csv")
-    CSV.foreach(state_file_name) do |state_row|
-      # CSV columns: 01,AL,Alabama, 01779775
+    CSV.foreach(state_file) do |state_row|
+      # state code (01), state postal code (AL), state name (Alabama), state ansi code (01779775)
       if state_param == state_row[0] || state_param.upcase == state_row[2].upcase || state_param == state_row[3]
-        return state_row[1].upcase
+        return state_row[1].upcase if STATE_POSTAL_CODES.include?(state_row[1].upcase)
       end
-
-      # what to return /error & exit if state code is not found?
     end
+    raise StandardError, "No state found matching: #{state_param}"
   end
 
-  def self.county_filename(state_param)
-    state_code = find_state_code(state_param)
+  private
 
-    # error & quit if no state_code ?
+  def self.state_county_file(state_code)
     File.join(File.dirname(__FILE__), "/county/#{state_code}.csv")
+  end
+
+  def self.state_file
+    File.join(File.dirname(__FILE__), "/state.csv")
   end
 end
