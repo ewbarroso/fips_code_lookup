@@ -10,17 +10,15 @@ module FipsLookup
                           ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
                           AS GU MP PR UM VI].freeze
 
-  # when county not found and raise StandardError, input is not memoized - stack bubbles with error
-  # when county not found without raise error, input is memoized and nil is returned
-  def self.county(state_param, county_name_param)
+  def self.county(state_param, county_name_param, return_nil = false)
     lookup = [state_param, county_name_param]
     @_county_fips ||= {}
-    # puts "fips memo hash: ", @_county_fips
-    @_county_fips[lookup] ||= county_lookup(state_param, county_name_param)
+    @_county_fips[lookup] ||= county_lookup(state_param, county_name_param, return_nil)
   end
 
-  def self.county_lookup(state_param, county_name_param)
-    state_code = find_state_code(state_param)
+  def self.county_lookup(state_param, county_name_param, return_nil = false)
+    state_code = find_state_code(state_param, return_nil)
+    return nil if state_code.nil?
 
     CSV.foreach(state_county_file(state_code)) do |county_row|
       # state (AL), state code (01), county fips (001), county name (Augtauga County), county class code (H1)
@@ -28,14 +26,11 @@ module FipsLookup
         return county_row[2]
       end
     end
-    # retry with variations of county param?
 
-    # raise StandardError, "No county found matching: #{county_name_param}"
+    raise StandardError, "No county found matching: #{county_name_param}" unless return_nil
   end
 
-  # state code lookups (geo id / ANSI - memoize whole state file ?)
-
-  def self.find_state_code(state_param)
+  def self.find_state_code(state_param, return_nil = false)
     return state_param.upcase if STATE_POSTAL_CODES.include?(state_param.upcase)
 
     CSV.foreach(state_file) do |state_row|
@@ -44,7 +39,8 @@ module FipsLookup
         return state_row[1].upcase if STATE_POSTAL_CODES.include?(state_row[1].upcase)
       end
     end
-    raise StandardError, "No state found matching: #{state_param}"
+
+    raise StandardError, "No state found matching: #{state_param}" unless return_nil
   end
 
   private
