@@ -8,7 +8,7 @@ RSpec.describe FipsLookup do
   describe ".county_lookup" do
     context "with searchable state and county params" do
       it "returns the proper fips code" do
-        expect(FipsLookup.county_lookup("Al", "Autauga County")).to eq("001")
+        expect(FipsLookup.county_lookup("Al", "Autauga County")).to eq("01001")
       end
     end
 
@@ -41,10 +41,10 @@ RSpec.describe FipsLookup do
 
   describe ".county" do
     it "populates a memoized hash attribute accessor with state paramater and county paramater as lookups" do
-      expect(FipsLookup.county("AL", "Autauga County")).to eq("001")
+      expect(FipsLookup.county("AL", "Autauga County")).to eq("01001")
 
       lookup = ["AL", "Autauga County"]
-      expect(FipsLookup.county_fips[lookup]).to eq("001")
+      expect(FipsLookup.county_fips[lookup]).to eq("01001")
     end
   end
 end

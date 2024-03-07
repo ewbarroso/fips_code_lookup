@@ -25,7 +25,7 @@ module FipsLookup
       CSV.foreach(state_county_file(state_code)) do |county_row|
         # state (AL), state code (01), county fips (001), county name (Augtauga County), county class code (H1)
         if county_row[3].upcase == county_name_param.upcase
-          return county_row[2]
+          return county_row[1] + county_row[2]
         end
       end
 
