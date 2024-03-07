@@ -2,11 +2,13 @@ PATH
   remote: .
   specs:
     fips_lookup (0.1.0)
+      csv (~> 3.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    csv (3.2.8)
     diff-lcs (1.5.0)
     json (2.6.2)
     nokogiri (1.16.2-arm64-darwin)
@@ -56,6 +58,7 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
+  csv (~> 3.2)
   fips_lookup!
   rake (~> 13.0)
   rspec (~> 3.2)
