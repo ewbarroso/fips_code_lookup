@@ -21,7 +21,7 @@ module FipsLookup
     attr_accessor :county_fips
 
     def county(state_param, county_name_param, return_nil = false)
-      lookup = [state_param.upcase, county_name_param.upcase]  # upcase?
+      lookup = [state_param.upcase, county_name_param.upcase]
       @county_fips ||= {}
       @county_fips[lookup] ||= county_lookup(state_param, county_name_param, return_nil)
     end
