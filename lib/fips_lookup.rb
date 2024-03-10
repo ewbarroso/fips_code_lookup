@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "fips_lookup/version"
-require 'csv' 
+require 'csv'
+require 'pathname'
 
 module FipsLookup
   STATE_CODES = { "AL" => "01", "AK" => "02", "AZ" => "04", "AR" => "05", "CA" => "06", "CO" => "08",
@@ -56,11 +57,11 @@ module FipsLookup
     private
 
     def state_county_file(state_code)
-      File.join(File.dirname(__FILE__), "/county/#{state_code}.csv")
+      Pathname.getwd + "lib/county/#{state_code}.csv"
     end
 
     def state_file
-      File.join(File.dirname(__FILE__), "/state.csv")
+      Pathname.getwd + "lib/state.csv"
     end
   end
 end
