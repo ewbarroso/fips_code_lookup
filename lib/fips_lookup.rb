@@ -54,6 +54,25 @@ module FipsLookup
       raise StandardError, "No state found matching: #{state_param}" unless return_nil
     end
 
+    def fips_county(fips_param, return_nil = false)
+      unless fips_param.is_a?(String) && fips_param.length == 5
+        return_nil ? (return nil) : (raise StandardError, "FIPS input must be 5 digit string")
+      end
+      state_code = STATE_CODES.key(fips_param[0..1])
+
+      if state_code.nil?
+        return_nil ? (return nil) : (raise StandardError, "Could not find state with FIPS: #{fips_param[0..1]}")
+      end
+
+      CSV.foreach(state_county_file(state_code)) do |county_row|
+        if county_row[2] == fips_param[2..4]
+          return [county_row[3], state_code]
+        end
+      end
+
+      raise StandardError, "Could not find #{state_code} county matching FIPS: #{fips_param[2..4]}" unless return_nil
+    end
+
     private
 
     def state_county_file(state_code)
