@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'pathname'
 
 RSpec.describe FipsLookup do
   it "has a version number" do
@@ -45,6 +46,13 @@ RSpec.describe FipsLookup do
 
       lookup = ["AL", "Autauga County"]
       expect(FipsLookup.county_fips[lookup]).to eq("01001")
+    end
+  end
+
+  describe "STATE_CODES" do
+    it "is a hash with the same number of key value pairs as rows in the state.csv file" do
+      state_file_path = Pathname.getwd + "lib/state.csv"
+      expect(FipsLookup::STATE_CODES.length - 1).to eq(`wc -l #{state_file_path}`.to_i)
     end
   end
 end
