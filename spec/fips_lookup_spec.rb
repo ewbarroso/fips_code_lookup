@@ -44,7 +44,7 @@ RSpec.describe FipsLookup do
     it "populates a memoized hash attribute accessor with state parameter and county parameter as lookups" do
       expect(FipsLookup.county("AL", "Autauga County")).to eq("01001")
 
-      lookup = ["AL", "Autauga County"]
+      lookup = ["AL".upcase, "Autauga County".upcase]
       expect(FipsLookup.county_fips[lookup]).to eq("01001")
     end
   end
